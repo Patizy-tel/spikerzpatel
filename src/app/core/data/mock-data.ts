@@ -49,46 +49,190 @@ export const MOCK_ASSETS: Asset[] = [
 
 export const MOCK_GRAPH_DATA: GraphData = {
   nodes: [
+    // Entry Point - Internet
     {
-      id: 'node-1',
-      label: 'Internet Gateway',
-      data: { ...MOCK_ASSETS[3], name: 'gateway-01', ipAddress: '203.0.113.1' },
+      id: 'node-internet',
+      label: 'Internet',
+      data: {
+        id: 'asset-internet',
+        name: 'Public Internet',
+        ipAddress: '0.0.0.0/0',
+        risk: 'low',
+        tags: [{ label: 'External', type: 'warning' }]
+      },
     },
+    // Edge Layer
     {
-      id: 'node-2',
+      id: 'node-fw',
+      label: 'Edge Firewall',
+      data: {
+        id: 'asset-fw',
+        name: 'fw-edge-01',
+        ipAddress: '203.0.113.1',
+        risk: 'low',
+        tags: [
+          { label: 'Production', type: 'error' },
+          { label: 'Hardened', type: 'success' }
+        ]
+      },
+    },
+    // DMZ Layer
+    {
+      id: 'node-lb',
       label: 'Load Balancer',
-      data: { ...MOCK_ASSETS[3], name: 'lb-prod-01', ipAddress: '10.0.0.10' },
+      data: {
+        id: 'asset-lb',
+        name: 'lb-prod-01',
+        ipAddress: '10.0.0.10',
+        risk: 'medium',
+        tags: [
+          { label: 'DMZ', type: 'info' },
+          { label: 'Production', type: 'error' }
+        ]
+      },
     },
     {
-      id: 'node-3',
+      id: 'node-waf',
+      label: 'WAF',
+      data: {
+        id: 'asset-waf',
+        name: 'waf-prod-01',
+        ipAddress: '10.0.0.15',
+        risk: 'low',
+        tags: [
+          { label: 'DMZ', type: 'info' },
+          { label: 'Security', type: 'success' }
+        ]
+      },
+    },
+    // Application Layer
+    {
+      id: 'node-api',
       label: 'API Gateway',
-      data: { ...MOCK_ASSETS[2], name: 'api-gateway', ipAddress: '10.0.1.5' },
+      data: {
+        id: 'asset-api',
+        name: 'api-gateway-01',
+        ipAddress: '10.0.1.5',
+        risk: 'high',
+        tags: [
+          { label: 'App Tier', type: 'info' },
+          { label: 'Vulnerable', type: 'error' }
+        ]
+      },
     },
     {
-      id: 'node-4',
-      label: 'prod-web-server-01',
+      id: 'node-web1',
+      label: 'Web Server 01',
       data: MOCK_ASSETS[0],
     },
     {
-      id: 'node-5',
-      label: 'prod-web-server-02',
+      id: 'node-web2',
+      label: 'Web Server 02',
       data: MOCK_ASSETS[1],
+    },
+    {
+      id: 'node-app1',
+      label: 'App Server 01',
+      data: {
+        id: 'asset-app1',
+        name: 'app-server-01',
+        ipAddress: '10.0.2.20',
+        risk: 'critical',
+        tags: [
+          { label: 'App Tier', type: 'info' },
+          { label: 'SSH Exposed', type: 'error' }
+        ]
+      },
+    },
+    {
+      id: 'node-app2',
+      label: 'App Server 02',
+      data: {
+        id: 'asset-app2',
+        name: 'app-server-02',
+        ipAddress: '10.0.2.21',
+        risk: 'high',
+        tags: [
+          { label: 'App Tier', type: 'info' },
+          { label: 'Patching', type: 'warning' }
+        ]
+      },
+    },
+    // Data Layer
+    {
+      id: 'node-db-primary',
+      label: 'DB Primary',
+      data: {
+        id: 'asset-db1',
+        name: 'db-primary-01',
+        ipAddress: '10.0.3.50',
+        risk: 'critical',
+        tags: [
+          { label: 'Data Tier', type: 'default' },
+          { label: 'PII Data', type: 'error' }
+        ]
+      },
+    },
+    {
+      id: 'node-db-replica',
+      label: 'DB Replica',
+      data: {
+        id: 'asset-db2',
+        name: 'db-replica-01',
+        ipAddress: '10.0.3.51',
+        risk: 'high',
+        tags: [
+          { label: 'Data Tier', type: 'default' },
+          { label: 'Backup', type: 'info' }
+        ]
+      },
+    },
+    {
+      id: 'node-cache',
+      label: 'Redis Cache',
+      data: {
+        id: 'asset-cache',
+        name: 'cache-redis-01',
+        ipAddress: '10.0.3.60',
+        risk: 'medium',
+        tags: [
+          { label: 'Data Tier', type: 'default' },
+          { label: 'Sessions', type: 'warning' }
+        ]
+      },
     },
   ],
   edges: [
-    { id: 'edge-1', source: 'node-1', target: 'node-2' },
-    { id: 'edge-2', source: 'node-2', target: 'node-3' },
-    { id: 'edge-3', source: 'node-3', target: 'node-4' },
-    { id: 'edge-4', source: 'node-3', target: 'node-5' },
+    // Internet to Edge
+    { id: 'edge-1', source: 'node-internet', target: 'node-fw' },
+    // Edge to DMZ
+    { id: 'edge-2', source: 'node-fw', target: 'node-lb' },
+    { id: 'edge-3', source: 'node-fw', target: 'node-waf' },
+    // DMZ to App Layer
+    { id: 'edge-4', source: 'node-lb', target: 'node-api' },
+    { id: 'edge-5', source: 'node-waf', target: 'node-api' },
+    // API to Web Servers
+    { id: 'edge-6', source: 'node-api', target: 'node-web1' },
+    { id: 'edge-7', source: 'node-api', target: 'node-web2' },
+    // Web to App Servers
+    { id: 'edge-8', source: 'node-web1', target: 'node-app1' },
+    { id: 'edge-9', source: 'node-web2', target: 'node-app2' },
+    // App Servers to Data Layer
+    { id: 'edge-10', source: 'node-app1', target: 'node-db-primary' },
+    { id: 'edge-11', source: 'node-app2', target: 'node-db-primary' },
+    { id: 'edge-12', source: 'node-app1', target: 'node-cache' },
+    { id: 'edge-13', source: 'node-app2', target: 'node-cache' },
+    // DB Replication
+    { id: 'edge-14', source: 'node-db-primary', target: 'node-db-replica' },
   ],
 };
 
 export const MOCK_RISK_SUMMARY: RiskSummary = {
-  critical: 2,
-  high: 0,
-  medium: 0,
-  low: 0,
-  total: 2,
+  critical: 4,
+  high: 3,
+  medium: 2,
+  low: 3,
+  total: 12,
 };
 
 export const MOCK_VULNERABILITY: Vulnerability = {
