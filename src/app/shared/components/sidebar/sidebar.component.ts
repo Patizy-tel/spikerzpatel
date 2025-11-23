@@ -59,7 +59,8 @@ export interface SidebarItem {
       display: flex;
       flex-direction: column;
       width: 15rem;
-      height: 100%;
+      height: 100vh;
+      height: 100dvh;
       background-color: var(--color-bg-primary);
       border-right: 1px solid var(--color-border);
     }
@@ -70,12 +71,16 @@ export interface SidebarItem {
       justify-content: space-between;
       padding: var(--spacing-md) var(--spacing-lg);
       border-bottom: 1px solid var(--color-border);
+      flex-shrink: 0;
     }
 
     .breadcrumb {
       font-size: 0.875rem;
       font-weight: 500;
       color: var(--color-text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .collapse-btn {
@@ -89,22 +94,30 @@ export interface SidebarItem {
       color: white;
       border-radius: var(--radius-full);
       cursor: pointer;
-      transition: background-color 0.2s ease;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
     }
 
     .collapse-btn:hover {
       background-color: #059669;
+      transform: scale(1.05);
     }
 
     .sidebar-nav {
       flex: 1;
       overflow-y: auto;
       padding: var(--spacing-sm) 0;
+      -webkit-overflow-scrolling: touch;
     }
 
     .sidebar-nav a {
       margin: var(--spacing-xs) var(--spacing-sm);
       border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+    }
+
+    .sidebar-nav a:hover {
+      background-color: var(--color-bg-secondary);
     }
 
     .sidebar-nav a.active {
@@ -119,6 +132,7 @@ export interface SidebarItem {
     .sidebar-footer {
       padding: var(--spacing-md);
       border-top: 1px solid var(--color-border);
+      flex-shrink: 0;
     }
 
     .user-info {
@@ -136,6 +150,7 @@ export interface SidebarItem {
       background-color: var(--color-bg-tertiary);
       border-radius: var(--radius-full);
       color: var(--color-text-secondary);
+      flex-shrink: 0;
     }
 
     .user-details {
@@ -149,6 +164,9 @@ export interface SidebarItem {
       font-size: 0.875rem;
       font-weight: 500;
       color: var(--color-text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .user-role {
@@ -167,10 +185,36 @@ export interface SidebarItem {
       color: var(--color-text-secondary);
       cursor: pointer;
       border-radius: var(--radius-sm);
+      transition: all 0.2s ease;
+      flex-shrink: 0;
     }
 
     .settings-btn:hover {
       background-color: var(--color-bg-tertiary);
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 17rem;
+        max-width: 85vw;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+      }
+
+      .collapse-btn {
+        display: none;
+      }
+
+      .sidebar-nav a {
+        padding: var(--spacing-md);
+      }
+    }
+
+    /* Safe area for notched devices */
+    @supports (padding: env(safe-area-inset-left)) {
+      .sidebar {
+        padding-left: env(safe-area-inset-left);
+      }
     }
   `,
 })
