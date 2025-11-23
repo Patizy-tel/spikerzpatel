@@ -52,20 +52,25 @@ export const MOCK_GRAPH_DATA: GraphData = {
     {
       id: 'node-1',
       label: 'Internet Gateway',
-      data: MOCK_ASSETS[0],
+      data: { ...MOCK_ASSETS[3], name: 'gateway-01', ipAddress: '203.0.113.1' },
     },
     {
       id: 'node-2',
       label: 'Load Balancer',
-      data: MOCK_ASSETS[3],
+      data: { ...MOCK_ASSETS[3], name: 'lb-prod-01', ipAddress: '10.0.0.10' },
     },
     {
       id: 'node-3',
+      label: 'API Gateway',
+      data: { ...MOCK_ASSETS[2], name: 'api-gateway', ipAddress: '10.0.1.5' },
+    },
+    {
+      id: 'node-4',
       label: 'prod-web-server-01',
       data: MOCK_ASSETS[0],
     },
     {
-      id: 'node-4',
+      id: 'node-5',
       label: 'prod-web-server-02',
       data: MOCK_ASSETS[1],
     },
@@ -74,6 +79,7 @@ export const MOCK_GRAPH_DATA: GraphData = {
     { id: 'edge-1', source: 'node-1', target: 'node-2' },
     { id: 'edge-2', source: 'node-2', target: 'node-3' },
     { id: 'edge-3', source: 'node-3', target: 'node-4' },
+    { id: 'edge-4', source: 'node-3', target: 'node-5' },
   ],
 };
 
