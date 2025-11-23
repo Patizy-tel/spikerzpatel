@@ -33,41 +33,40 @@ interface TrendData {
   standalone: true,
   imports: [MatIconModule, RouterLink],
   template: `
-    <div class="dashboard-container" [class.loaded]="isLoaded()">
+    <div class="p-6 max-w-[1400px] mx-auto animate-fade-in" [class.loaded]="isLoaded()">
       <!-- Header -->
-      <header class="dashboard-header">
-        <div class="header-content">
-          <h1 class="page-title">Security Dashboard</h1>
-          <p class="page-subtitle">Real-time vulnerability and asset monitoring</p>
+      <header class="flex justify-between items-start mb-8 gap-4 flex-wrap">
+        <div>
+          <h1 class="text-3xl font-bold text-slate-800 m-0">Security Dashboard</h1>
+          <p class="text-sm text-slate-400 mt-1">Real-time vulnerability and asset monitoring</p>
         </div>
-        <div class="header-actions">
-          <button class="action-btn secondary">
-            <mat-icon>file_download</mat-icon>
+        <div class="flex gap-2">
+          <button class="flex items-center gap-1 py-2 px-4 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 border-none bg-white text-slate-500 border border-slate-200 hover:bg-slate-50">
+            <mat-icon class="icon-sm">file_download</mat-icon>
             Export
           </button>
-          <button class="action-btn primary">
-            <mat-icon>refresh</mat-icon>
+          <button class="flex items-center gap-1 py-2 px-4 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 border-none bg-emerald-500 text-white hover:bg-emerald-600 hover:-translate-y-0.5">
+            <mat-icon class="icon-sm">refresh</mat-icon>
             Sync Now
           </button>
         </div>
       </header>
 
       <!-- Stats Cards -->
-      <section class="stats-grid">
+      <section class="grid grid-cols-4 max-xl:grid-cols-2 max-md:grid-cols-1 gap-4 mb-8">
         @for (stat of statCards; track stat.title; let i = $index) {
           <div
-            class="stat-card"
-            [class]="stat.color"
+            class="stat-card bg-white rounded-xl p-6 border border-slate-200 flex gap-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
             [style.animation-delay]="(i * 100) + 'ms'"
           >
-            <div class="stat-icon-wrapper" [class]="stat.color">
+            <div class="stat-icon flex items-center justify-center w-12 h-12 rounded-lg shrink-0" [class]="stat.color">
               <mat-icon>{{ stat.icon }}</mat-icon>
             </div>
-            <div class="stat-content">
-              <span class="stat-title">{{ stat.title }}</span>
-              <span class="stat-value">{{ animatedValues()[i] }}</span>
-              <div class="stat-change" [class]="stat.changeType">
-                <mat-icon>{{ stat.changeType === 'increase' ? 'trending_up' : 'trending_down' }}</mat-icon>
+            <div class="flex flex-col min-w-0">
+              <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">{{ stat.title }}</span>
+              <span class="text-3xl font-bold text-slate-800 leading-tight">{{ animatedValues()[i] }}</span>
+              <div class="flex items-center gap-1 text-xs mt-1" [class]="stat.changeType === 'increase' ? 'text-red-500' : 'text-emerald-500'">
+                <mat-icon class="!text-sm !w-3.5 !h-3.5">{{ stat.changeType === 'increase' ? 'trending_up' : 'trending_down' }}</mat-icon>
                 <span>{{ stat.change }}% from last month</span>
               </div>
             </div>
@@ -76,26 +75,26 @@ interface TrendData {
       </section>
 
       <!-- Main Content Grid -->
-      <div class="content-grid">
+      <div class="grid grid-cols-[2fr_1fr] max-lg:grid-cols-1 gap-6 mb-8">
         <!-- Trend Chart -->
-        <section class="chart-section">
-          <div class="section-header">
-            <h2 class="section-title">
-              <mat-icon>show_chart</mat-icon>
+        <section class="bg-white rounded-xl p-6 border border-slate-200">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="flex items-center gap-2 text-base font-semibold text-slate-800 m-0">
+              <mat-icon class="icon-md text-slate-400">show_chart</mat-icon>
               Vulnerability Trend
             </h2>
-            <div class="chart-legend">
-              <span class="legend-item critical"><span class="dot"></span> Critical</span>
-              <span class="legend-item high"><span class="dot"></span> High</span>
-              <span class="legend-item medium"><span class="dot"></span> Medium</span>
-              <span class="legend-item low"><span class="dot"></span> Low</span>
+            <div class="flex gap-4 max-md:hidden">
+              <span class="flex items-center gap-1.5 text-xs text-slate-500"><span class="w-2 h-2 rounded-full bg-red-500"></span> Critical</span>
+              <span class="flex items-center gap-1.5 text-xs text-slate-500"><span class="w-2 h-2 rounded-full bg-orange-500"></span> High</span>
+              <span class="flex items-center gap-1.5 text-xs text-slate-500"><span class="w-2 h-2 rounded-full bg-yellow-500"></span> Medium</span>
+              <span class="flex items-center gap-1.5 text-xs text-slate-500"><span class="w-2 h-2 rounded-full bg-green-500"></span> Low</span>
             </div>
           </div>
-          <div class="chart-container">
-            <div class="chart-bars">
+          <div class="h-48 mt-4">
+            <div class="flex justify-between items-end h-full gap-2 px-2">
               @for (data of trendData; track data.month; let i = $index) {
                 <div
-                  class="bar-group"
+                  class="bar-group flex flex-col items-center flex-1 h-full relative cursor-pointer"
                   [class.active]="activeBar() === i"
                   [style.animation-delay]="(i * 100 + 400) + 'ms'"
                   (mouseenter)="activeBar.set(i)"
@@ -104,34 +103,20 @@ interface TrendData {
                 >
                   <!-- Tooltip -->
                   <div class="bar-tooltip" [class.visible]="activeBar() === i">
-                    <div class="tooltip-title">{{ data.month }} 2024</div>
-                    <div class="tooltip-row critical">
-                      <span class="tooltip-dot"></span>
-                      <span>Critical: {{ data.critical }}</span>
-                    </div>
-                    <div class="tooltip-row high">
-                      <span class="tooltip-dot"></span>
-                      <span>High: {{ data.high }}</span>
-                    </div>
-                    <div class="tooltip-row medium">
-                      <span class="tooltip-dot"></span>
-                      <span>Medium: {{ data.medium }}</span>
-                    </div>
-                    <div class="tooltip-row low">
-                      <span class="tooltip-dot"></span>
-                      <span>Low: {{ data.low }}</span>
-                    </div>
-                    <div class="tooltip-total">
-                      Total: {{ data.critical + data.high + data.medium + data.low }}
-                    </div>
+                    <div class="text-xs font-semibold text-slate-800 mb-1 pb-1 border-b border-slate-200">{{ data.month }} 2024</div>
+                    <div class="flex items-center gap-1.5 text-xs text-slate-500 py-0.5"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span><span>Critical: {{ data.critical }}</span></div>
+                    <div class="flex items-center gap-1.5 text-xs text-slate-500 py-0.5"><span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span><span>High: {{ data.high }}</span></div>
+                    <div class="flex items-center gap-1.5 text-xs text-slate-500 py-0.5"><span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span><span>Medium: {{ data.medium }}</span></div>
+                    <div class="flex items-center gap-1.5 text-xs text-slate-500 py-0.5"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span><span>Low: {{ data.low }}</span></div>
+                    <div class="text-xs font-semibold text-slate-800 mt-1 pt-1 border-t border-slate-200">Total: {{ data.critical + data.high + data.medium + data.low }}</div>
                   </div>
-                  <div class="stacked-bar">
-                    <div class="bar-segment critical" [style.height.%]="data.critical * 2"></div>
-                    <div class="bar-segment high" [style.height.%]="data.high * 2"></div>
-                    <div class="bar-segment medium" [style.height.%]="data.medium * 2"></div>
-                    <div class="bar-segment low" [style.height.%]="data.low * 2"></div>
+                  <div class="stacked-bar flex flex-col-reverse w-full max-w-10 h-[calc(100%-1.5rem)] rounded-t overflow-hidden bg-slate-100">
+                    <div class="w-full bg-gradient-to-t from-red-600 to-red-500 transition-all duration-1000" [style.height.%]="data.critical * 2"></div>
+                    <div class="w-full bg-gradient-to-t from-orange-500 to-orange-400 transition-all duration-1000" [style.height.%]="data.high * 2"></div>
+                    <div class="w-full bg-gradient-to-t from-blue-500 to-blue-400 transition-all duration-1000" [style.height.%]="data.medium * 2"></div>
+                    <div class="w-full bg-gradient-to-t from-green-500 to-green-400 transition-all duration-1000" [style.height.%]="data.low * 2"></div>
                   </div>
-                  <span class="bar-label">{{ data.month }}</span>
+                  <span class="text-xs text-slate-400 mt-1 transition-all duration-200">{{ data.month }}</span>
                 </div>
               }
             </div>
@@ -139,34 +124,31 @@ interface TrendData {
         </section>
 
         <!-- Recent Activity -->
-        <section class="activity-section">
-          <div class="section-header">
-            <h2 class="section-title">
-              <mat-icon>history</mat-icon>
+        <section class="bg-white rounded-xl p-6 border border-slate-200">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="flex items-center gap-2 text-base font-semibold text-slate-800 m-0">
+              <mat-icon class="icon-md text-slate-400">history</mat-icon>
               Recent Activity
             </h2>
-            <a class="view-all-link" routerLink="/vulnerabilities">View All</a>
+            <a class="text-caption text-blue-500 no-underline font-medium hover:text-blue-600" routerLink="/vulnerabilities">View All</a>
           </div>
-          <div class="activity-list">
+          <div class="flex flex-col gap-2">
             @for (activity of recentActivity; track activity.id; let i = $index) {
-              <div
-                class="activity-item"
-                [style.animation-delay]="(i * 80 + 300) + 'ms'"
-              >
-                <div class="activity-icon" [class]="activity.type">
-                  <mat-icon>{{ getActivityIcon(activity.type) }}</mat-icon>
+              <div class="activity-item flex gap-2 p-2 rounded-lg transition-colors hover:bg-slate-50" [style.animation-delay]="(i * 80 + 300) + 'ms'">
+                <div class="activity-icon flex items-center justify-center w-8 h-8 rounded-lg shrink-0" [class]="activity.type">
+                  <mat-icon class="!text-base !w-4 !h-4">{{ getActivityIcon(activity.type) }}</mat-icon>
                 </div>
-                <div class="activity-content">
-                  <div class="activity-header">
-                    <span class="activity-title">{{ activity.title }}</span>
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2">
+                    <span class="text-caption font-semibold text-slate-800">{{ activity.title }}</span>
                     @if (activity.severity) {
-                      <span class="severity-badge" [class]="activity.severity">
+                      <span class="severity-badge text-2xs font-semibold py-0.5 px-1.5 rounded-full uppercase" [class]="activity.severity">
                         {{ activity.severity }}
                       </span>
                     }
                   </div>
-                  <p class="activity-description">{{ activity.description }}</p>
-                  <span class="activity-time">{{ activity.time }}</span>
+                  <p class="text-xs text-slate-500 m-0 mt-0.5 truncate max-sm:hidden">{{ activity.description }}</p>
+                  <span class="text-xs text-slate-400">{{ activity.time }}</span>
                 </div>
               </div>
             }
@@ -175,350 +157,73 @@ interface TrendData {
       </div>
 
       <!-- Quick Actions -->
-      <section class="quick-actions">
-        <h2 class="section-title">
-          <mat-icon>bolt</mat-icon>
+      <section class="bg-white rounded-xl p-6 border border-slate-200">
+        <h2 class="flex items-center gap-2 text-base font-semibold text-slate-800 m-0 mb-4">
+          <mat-icon class="icon-md text-slate-400">bolt</mat-icon>
           Quick Actions
         </h2>
-        <div class="actions-grid">
-          <a routerLink="/vulnerabilities" class="quick-action-card">
-            <div class="action-icon vulnerabilities">
-              <mat-icon>bug_report</mat-icon>
+        <div class="grid grid-cols-4 max-xl:grid-cols-2 max-md:grid-cols-1 gap-4">
+          <a routerLink="/vulnerabilities" class="flex items-center gap-2 p-4 bg-slate-50 rounded-lg no-underline transition-all duration-300 border border-transparent hover:bg-white hover:border-slate-200 hover:-translate-y-0.5 hover:shadow-md group">
+            <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-red-50 to-red-200 text-red-500">
+              <mat-icon class="icon-md">bug_report</mat-icon>
             </div>
-            <span class="action-label">View Vulnerabilities</span>
-            <mat-icon class="arrow">arrow_forward</mat-icon>
+            <span class="text-sm font-medium text-slate-800 flex-1">View Vulnerabilities</span>
+            <mat-icon class="icon-sm text-slate-400 transition-transform duration-200 group-hover:translate-x-1">arrow_forward</mat-icon>
           </a>
-          <a routerLink="/assets" class="quick-action-card">
-            <div class="action-icon assets">
-              <mat-icon>devices</mat-icon>
+          <a routerLink="/assets" class="flex items-center gap-2 p-4 bg-slate-50 rounded-lg no-underline transition-all duration-300 border border-transparent hover:bg-white hover:border-slate-200 hover:-translate-y-0.5 hover:shadow-md group">
+            <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 text-blue-500">
+              <mat-icon class="icon-md">devices</mat-icon>
             </div>
-            <span class="action-label">Manage Assets</span>
-            <mat-icon class="arrow">arrow_forward</mat-icon>
+            <span class="text-sm font-medium text-slate-800 flex-1">Manage Assets</span>
+            <mat-icon class="icon-sm text-slate-400 transition-transform duration-200 group-hover:translate-x-1">arrow_forward</mat-icon>
           </a>
-          <a routerLink="/reports" class="quick-action-card">
-            <div class="action-icon reports">
-              <mat-icon>assessment</mat-icon>
+          <a routerLink="/reports" class="flex items-center gap-2 p-4 bg-slate-50 rounded-lg no-underline transition-all duration-300 border border-transparent hover:bg-white hover:border-slate-200 hover:-translate-y-0.5 hover:shadow-md group">
+            <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-purple-50 to-purple-200 text-purple-500">
+              <mat-icon class="icon-md">assessment</mat-icon>
             </div>
-            <span class="action-label">Generate Report</span>
-            <mat-icon class="arrow">arrow_forward</mat-icon>
+            <span class="text-sm font-medium text-slate-800 flex-1">Generate Report</span>
+            <mat-icon class="icon-sm text-slate-400 transition-transform duration-200 group-hover:translate-x-1">arrow_forward</mat-icon>
           </a>
-          <a routerLink="/settings" class="quick-action-card">
-            <div class="action-icon settings">
-              <mat-icon>settings</mat-icon>
+          <a routerLink="/settings" class="flex items-center gap-2 p-4 bg-slate-50 rounded-lg no-underline transition-all duration-300 border border-transparent hover:bg-white hover:border-slate-200 hover:-translate-y-0.5 hover:shadow-md group">
+            <div class="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-50 to-emerald-200 text-emerald-500">
+              <mat-icon class="icon-md">settings</mat-icon>
             </div>
-            <span class="action-label">Configuration</span>
-            <mat-icon class="arrow">arrow_forward</mat-icon>
+            <span class="text-sm font-medium text-slate-800 flex-1">Configuration</span>
+            <mat-icon class="icon-sm text-slate-400 transition-transform duration-200 group-hover:translate-x-1">arrow_forward</mat-icon>
           </a>
         </div>
       </section>
     </div>
   `,
   styles: `
-    .dashboard-container {
-      padding: var(--spacing-lg);
-      max-width: 1400px;
-      margin: 0 auto;
+    @reference "tailwindcss";
+
+    /* Animations that can't be done with Tailwind */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(1rem); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-in {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    .stat-card {
+      opacity: 0;
+      transform: translateY(1rem);
+      animation: fadeInUp 0.4s ease forwards;
+    }
+
+    .stat-icon.critical { @apply bg-gradient-to-br from-red-50 to-red-200 text-red-500; }
+    .stat-icon.high { @apply bg-gradient-to-br from-orange-50 to-orange-200 text-orange-500; }
+    .stat-icon.medium { @apply bg-gradient-to-br from-blue-50 to-blue-200 text-blue-500; }
+    .stat-icon.success { @apply bg-gradient-to-br from-emerald-50 to-emerald-200 text-emerald-500; }
+
+    .bar-group {
       opacity: 0;
       transform: translateY(1rem);
       animation: fadeInUp 0.5s ease forwards;
     }
-
-    .dashboard-container.loaded {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Header */
-    .dashboard-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: var(--spacing-xl);
-      gap: var(--spacing-md);
-      flex-wrap: wrap;
-    }
-
-    .page-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--color-text-primary);
-      margin: 0;
-    }
-
-    .page-subtitle {
-      font-size: 0.875rem;
-      color: var(--color-text-muted);
-      margin: var(--spacing-xs) 0 0;
-    }
-
-    .header-actions {
-      display: flex;
-      gap: var(--spacing-sm);
-    }
-
-    .action-btn {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-xs);
-      padding: var(--spacing-sm) var(--spacing-md);
-      border-radius: var(--radius-md);
-      font-size: 0.875rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border: none;
-    }
-
-    .action-btn mat-icon {
-      font-size: 1.125rem;
-      width: 1.125rem;
-      height: 1.125rem;
-    }
-
-    .action-btn.secondary {
-      background-color: var(--color-bg-primary);
-      color: var(--color-text-secondary);
-      border: 1px solid var(--color-border);
-    }
-
-    .action-btn.secondary:hover {
-      background-color: var(--color-bg-secondary);
-    }
-
-    .action-btn.primary {
-      background-color: var(--color-success);
-      color: white;
-    }
-
-    .action-btn.primary:hover {
-      background-color: #059669;
-      transform: translateY(-1px);
-    }
-
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--spacing-md);
-      margin-bottom: var(--spacing-xl);
-    }
-
-    .stat-card {
-      background-color: var(--color-bg-primary);
-      border-radius: var(--radius-lg);
-      padding: var(--spacing-lg);
-      border: 1px solid var(--color-border);
-      display: flex;
-      gap: var(--spacing-md);
-      opacity: 0;
-      transform: translateY(1rem);
-      animation: slideUp 0.4s ease forwards;
-      transition: all 0.3s ease;
-    }
-
-    .stat-card:hover {
-      transform: translateY(-0.25rem);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    }
-
-    @keyframes slideUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .stat-icon-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 3rem;
-      height: 3rem;
-      border-radius: var(--radius-md);
-      flex-shrink: 0;
-    }
-
-    .stat-icon-wrapper.critical {
-      background: linear-gradient(135deg, #fef2f2, #fecaca);
-      color: var(--color-critical);
-    }
-
-    .stat-icon-wrapper.high {
-      background: linear-gradient(135deg, #fff7ed, #fed7aa);
-      color: var(--color-high);
-    }
-
-    .stat-icon-wrapper.medium {
-      background: linear-gradient(135deg, #eff6ff, #bfdbfe);
-      color: var(--color-medium);
-    }
-
-    .stat-icon-wrapper.success {
-      background: linear-gradient(135deg, #f0fdf4, #bbf7d0);
-      color: var(--color-success);
-    }
-
-    .stat-content {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    .stat-title {
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--color-text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .stat-value {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--color-text-primary);
-      line-height: 1.2;
-    }
-
-    .stat-change {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      font-size: 0.75rem;
-      margin-top: var(--spacing-xs);
-    }
-
-    .stat-change mat-icon {
-      font-size: 0.875rem;
-      width: 0.875rem;
-      height: 0.875rem;
-    }
-
-    .stat-change.increase {
-      color: var(--color-critical);
-    }
-
-    .stat-change.decrease {
-      color: var(--color-success);
-    }
-
-    /* Content Grid */
-    .content-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: var(--spacing-lg);
-      margin-bottom: var(--spacing-xl);
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: var(--spacing-md);
-    }
-
-    .section-title {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      margin: 0;
-    }
-
-    .section-title mat-icon {
-      font-size: 1.25rem;
-      width: 1.25rem;
-      height: 1.25rem;
-      color: var(--color-text-muted);
-    }
-
-    /* Chart Section */
-    .chart-section {
-      background-color: var(--color-bg-primary);
-      border-radius: var(--radius-lg);
-      padding: var(--spacing-lg);
-      border: 1px solid var(--color-border);
-    }
-
-    .chart-legend {
-      display: flex;
-      gap: var(--spacing-md);
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 0.375rem;
-      font-size: 0.75rem;
-      color: var(--color-text-secondary);
-    }
-
-    .legend-item .dot {
-      width: 0.5rem;
-      height: 0.5rem;
-      border-radius: var(--radius-full);
-    }
-
-    .legend-item.critical .dot { background-color: var(--color-critical); }
-    .legend-item.high .dot { background-color: var(--color-high); }
-    .legend-item.medium .dot { background-color: var(--color-medium); }
-    .legend-item.low .dot { background-color: var(--color-success); }
-
-    .chart-container {
-      height: 12rem;
-      margin-top: var(--spacing-md);
-    }
-
-    .chart-bars {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      height: 100%;
-      gap: var(--spacing-sm);
-      padding: 0 var(--spacing-sm);
-    }
-
-    .bar-group {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex: 1;
-      height: 100%;
-      opacity: 0;
-      transform: translateY(1rem);
-      animation: slideUp 0.5s ease forwards;
-      position: relative;
-      cursor: pointer;
-    }
-
-    .stacked-bar {
-      display: flex;
-      flex-direction: column-reverse;
-      width: 100%;
-      max-width: 2.5rem;
-      height: calc(100% - 1.5rem);
-      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-      overflow: hidden;
-      background: var(--color-bg-tertiary);
-    }
-
-    .bar-segment {
-      width: 100%;
-      transition: height 1s ease;
-    }
-
-    .bar-segment.critical { background: linear-gradient(180deg, #ef4444, #dc2626); }
-    .bar-segment.high { background: linear-gradient(180deg, #fb923c, #f97316); }
-    .bar-segment.medium { background: linear-gradient(180deg, #60a5fa, #3b82f6); }
-    .bar-segment.low { background: linear-gradient(180deg, #4ade80, #22c55e); }
 
     .bar-group:hover .stacked-bar,
     .bar-group.active .stacked-bar {
@@ -526,371 +231,41 @@ interface TrendData {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
-    .bar-group:hover .bar-label,
-    .bar-group.active .bar-label {
-      color: var(--color-text-primary);
-      font-weight: 600;
+    .bar-group:hover span:last-child,
+    .bar-group.active span:last-child {
+      @apply text-slate-800 font-semibold;
     }
 
-    .bar-label {
-      font-size: 0.6875rem;
-      color: var(--color-text-muted);
-      margin-top: var(--spacing-xs);
-      transition: all 0.2s ease;
-    }
-
-    /* Tooltip */
     .bar-tooltip {
-      position: absolute;
-      bottom: calc(100% + 0.5rem);
-      left: 50%;
-      transform: translateX(-50%) translateY(0.5rem);
-      background: var(--color-bg-primary);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      padding: var(--spacing-sm);
-      min-width: 120px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.2s ease;
-      z-index: 100;
-      pointer-events: none;
+      @apply absolute bottom-full left-1/2 -translate-x-1/2 translate-y-2 bg-white border border-slate-200 rounded-lg p-2 min-w-[120px] shadow-xl opacity-0 invisible transition-all duration-200 z-50 pointer-events-none;
     }
 
     .bar-tooltip.visible {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    .tooltip-title {
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      margin-bottom: var(--spacing-xs);
-      padding-bottom: var(--spacing-xs);
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .tooltip-row {
-      display: flex;
-      align-items: center;
-      gap: 0.375rem;
-      font-size: 0.6875rem;
-      color: var(--color-text-secondary);
-      padding: 2px 0;
-    }
-
-    .tooltip-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-    }
-
-    .tooltip-row.critical .tooltip-dot { background: var(--color-critical); }
-    .tooltip-row.high .tooltip-dot { background: var(--color-high); }
-    .tooltip-row.medium .tooltip-dot { background: var(--color-medium); }
-    .tooltip-row.low .tooltip-dot { background: var(--color-success); }
-
-    .tooltip-total {
-      font-size: 0.6875rem;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      margin-top: var(--spacing-xs);
-      padding-top: var(--spacing-xs);
-      border-top: 1px solid var(--color-border);
-    }
-
-    /* Activity Section */
-    .activity-section {
-      background-color: var(--color-bg-primary);
-      border-radius: var(--radius-lg);
-      padding: var(--spacing-lg);
-      border: 1px solid var(--color-border);
-    }
-
-    .view-all-link {
-      font-size: 0.8125rem;
-      color: var(--color-info);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-
-    .view-all-link:hover {
-      color: #2563eb;
-    }
-
-    .activity-list {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-sm);
+      @apply opacity-100 visible translate-y-0;
     }
 
     .activity-item {
-      display: flex;
-      gap: var(--spacing-sm);
-      padding: var(--spacing-sm);
-      border-radius: var(--radius-md);
-      transition: background-color 0.2s;
       opacity: 0;
       transform: translateX(-0.5rem);
       animation: slideIn 0.4s ease forwards;
     }
 
     @keyframes slideIn {
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
+      to { opacity: 1; transform: translateX(0); }
     }
 
-    .activity-item:hover {
-      background-color: var(--color-bg-secondary);
-    }
+    .activity-icon.vulnerability { @apply bg-red-50 text-red-500; }
+    .activity-icon.asset { @apply bg-blue-50 text-blue-500; }
+    .activity-icon.remediation { @apply bg-emerald-50 text-emerald-500; }
+    .activity-icon.alert { @apply bg-orange-50 text-orange-500; }
 
-    .activity-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 2rem;
-      height: 2rem;
-      border-radius: var(--radius-md);
-      flex-shrink: 0;
-    }
-
-    .activity-icon mat-icon {
-      font-size: 1rem;
-      width: 1rem;
-      height: 1rem;
-    }
-
-    .activity-icon.vulnerability {
-      background-color: #fef2f2;
-      color: var(--color-critical);
-    }
-
-    .activity-icon.asset {
-      background-color: #eff6ff;
-      color: var(--color-info);
-    }
-
-    .activity-icon.remediation {
-      background-color: #f0fdf4;
-      color: var(--color-success);
-    }
-
-    .activity-icon.alert {
-      background-color: #fff7ed;
-      color: var(--color-high);
-    }
-
-    .activity-content {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .activity-header {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-    }
-
-    .activity-title {
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: var(--color-text-primary);
-    }
-
-    .severity-badge {
-      font-size: 0.625rem;
-      font-weight: 600;
-      padding: 0.125rem 0.375rem;
-      border-radius: var(--radius-full);
-      text-transform: uppercase;
-    }
-
-    .severity-badge.critical {
-      background-color: #fef2f2;
-      color: var(--color-critical);
-    }
-
-    .severity-badge.high {
-      background-color: #fff7ed;
-      color: var(--color-high);
-    }
-
-    .activity-description {
-      font-size: 0.75rem;
-      color: var(--color-text-secondary);
-      margin: 0.125rem 0 0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .activity-time {
-      font-size: 0.6875rem;
-      color: var(--color-text-muted);
-    }
-
-    /* Quick Actions */
-    .quick-actions {
-      background-color: var(--color-bg-primary);
-      border-radius: var(--radius-lg);
-      padding: var(--spacing-lg);
-      border: 1px solid var(--color-border);
-    }
-
-    .quick-actions .section-title {
-      margin-bottom: var(--spacing-md);
-    }
-
-    .actions-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--spacing-md);
-    }
-
-    .quick-action-card {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-      padding: var(--spacing-md);
-      background-color: var(--color-bg-secondary);
-      border-radius: var(--radius-md);
-      text-decoration: none;
-      transition: all 0.3s ease;
-      border: 1px solid transparent;
-    }
-
-    .quick-action-card:hover {
-      background-color: var(--color-bg-primary);
-      border-color: var(--color-border);
-      transform: translateY(-0.125rem);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    .quick-action-card:hover .arrow {
-      transform: translateX(0.25rem);
-    }
-
-    .action-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: var(--radius-md);
-    }
-
-    .action-icon mat-icon {
-      font-size: 1.25rem;
-      width: 1.25rem;
-      height: 1.25rem;
-    }
-
-    .action-icon.vulnerabilities {
-      background: linear-gradient(135deg, #fef2f2, #fecaca);
-      color: var(--color-critical);
-    }
-
-    .action-icon.assets {
-      background: linear-gradient(135deg, #eff6ff, #bfdbfe);
-      color: var(--color-info);
-    }
-
-    .action-icon.reports {
-      background: linear-gradient(135deg, #faf5ff, #e9d5ff);
-      color: #9333ea;
-    }
-
-    .action-icon.settings {
-      background: linear-gradient(135deg, #f0fdf4, #bbf7d0);
-      color: var(--color-success);
-    }
-
-    .action-label {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--color-text-primary);
-      flex: 1;
-    }
-
-    .quick-action-card .arrow {
-      color: var(--color-text-muted);
-      font-size: 1.125rem;
-      width: 1.125rem;
-      height: 1.125rem;
-      transition: transform 0.2s ease;
-    }
-
-    /* Responsive */
-    @media (max-width: 1280px) {
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .actions-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 1024px) {
-      .content-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    .severity-badge.critical { @apply bg-red-50 text-red-500; }
+    .severity-badge.high { @apply bg-orange-50 text-orange-500; }
+    .severity-badge.medium { @apply bg-yellow-50 text-yellow-500; }
+    .severity-badge.low { @apply bg-emerald-50 text-emerald-500; }
 
     @media (max-width: 768px) {
-      .dashboard-container {
-        padding: var(--spacing-md);
-      }
-
-      .dashboard-header {
-        flex-direction: column;
-      }
-
-      .header-actions {
-        width: 100%;
-      }
-
-      .action-btn {
-        flex: 1;
-        justify-content: center;
-      }
-
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .stat-card {
-        flex-direction: row;
-        align-items: center;
-      }
-
-      .chart-legend {
-        display: none;
-      }
-
-      .actions-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .page-title {
-        font-size: 1.5rem;
-      }
-
-      .stat-value {
-        font-size: 1.5rem;
-      }
-
-      .activity-description {
-        display: none;
-      }
+      .p-6 { @apply p-4; }
     }
   `,
 })

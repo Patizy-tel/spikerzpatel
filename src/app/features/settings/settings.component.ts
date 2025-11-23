@@ -1,68 +1,67 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { UiToggleComponent, UiButtonComponent, UiCardComponent } from '../../shared/components';
 
 @Component({
   selector: 'app-settings',
   standalone: true,
-  imports: [MatIconModule],
+  imports: [MatIconModule, UiToggleComponent, UiButtonComponent, UiCardComponent],
   template: `
-    <div class="settings-container" [class.loaded]="isLoaded()">
+    <div class="p-6 max-w-[1200px] mx-auto animate-fade-in" [class.loaded]="isLoaded()">
       <!-- Header -->
-      <header class="page-header">
-        <div class="header-content">
-          <h1 class="page-title">Settings</h1>
-          <p class="page-subtitle">Manage your preferences and configurations</p>
-        </div>
+      <header class="mb-8">
+        <h1 class="text-3xl font-bold text-slate-800 m-0">Settings</h1>
+        <p class="text-sm text-slate-400 mt-1">Manage your preferences and configurations</p>
       </header>
 
-      <div class="settings-layout">
+      <div class="grid grid-cols-[14rem_1fr] max-md:grid-cols-1 gap-8 max-md:gap-4">
         <!-- Sidebar Nav -->
-        <nav class="settings-nav">
+        <nav class="flex flex-col max-md:flex-row max-md:overflow-x-auto gap-1 max-md:pb-2">
           @for (section of settingsSections; track section.id) {
             <button
-              class="nav-item"
+              class="nav-item flex items-center gap-2 py-2 px-4 border-none bg-transparent rounded-lg text-sm font-medium text-slate-500 cursor-pointer transition-all duration-200 text-left max-md:whitespace-nowrap hover:bg-slate-100"
               [class.active]="activeSection() === section.id"
               (click)="activeSection.set(section.id)"
             >
-              <mat-icon>{{ section.icon }}</mat-icon>
+              <mat-icon class="icon-sm">{{ section.icon }}</mat-icon>
               {{ section.label }}
             </button>
           }
         </nav>
 
         <!-- Settings Content -->
-        <div class="settings-content">
+        <div class="min-w-0">
           <!-- Profile Section -->
           @if (activeSection() === 'profile') {
-            <section class="settings-section">
-              <h2 class="section-title">Profile Settings</h2>
-              <p class="section-desc">Manage your account information</p>
+            <section class="mb-8">
+              <h2 class="text-xl font-semibold text-slate-800 m-0 mb-1">Profile Settings</h2>
+              <p class="text-sm text-slate-400 m-0 mb-6">Manage your account information</p>
 
-              <div class="profile-card">
-                <div class="avatar-section">
-                  <div class="avatar">
-                    <mat-icon>person</mat-icon>
+              <div class="bg-white rounded-xl border border-slate-200 p-6 flex max-md:flex-col max-md:items-center gap-8">
+                <div class="flex flex-col items-center gap-2">
+                  <div class="flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-slate-100 to-slate-50 text-slate-400">
+                    <mat-icon class="icon-xl">person</mat-icon>
                   </div>
-                  <button class="change-avatar-btn">Change Photo</button>
+                  <button class="py-1 px-2 bg-transparent border border-slate-200 rounded-lg text-xs text-slate-500 cursor-pointer">Change Photo</button>
                 </div>
-                <div class="profile-form">
-                  <div class="form-row">
-                    <div class="form-group">
-                      <label>First Name</label>
-                      <input type="text" value="Patel" />
+                <div class="flex-1">
+                  <div class="grid grid-cols-2 max-md:grid-cols-1 gap-4 mb-4">
+                    <div>
+                      <label class="block text-caption font-medium text-slate-500 mb-1">First Name</label>
+                      <input type="text" value="Patel" class="w-full py-2 px-4 border border-slate-200 rounded-lg text-sm text-slate-800 bg-white" />
                     </div>
-                    <div class="form-group">
-                      <label>Last Name</label>
-                      <input type="text" value="Tanaka" />
+                    <div>
+                      <label class="block text-caption font-medium text-slate-500 mb-1">Last Name</label>
+                      <input type="text" value="Tanaka" class="w-full py-2 px-4 border border-slate-200 rounded-lg text-sm text-slate-800 bg-white" />
                     </div>
                   </div>
-                  <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" value="pateltanaka22@gmail.com" />
+                  <div class="mb-4">
+                    <label class="block text-caption font-medium text-slate-500 mb-1">Email Address</label>
+                    <input type="email" value="pateltanaka22@gmail.com" class="w-full py-2 px-4 border border-slate-200 rounded-lg text-sm text-slate-800 bg-white" />
                   </div>
-                  <div class="form-group">
-                    <label>Role</label>
-                    <input type="text" value="Security Analyst" disabled />
+                  <div>
+                    <label class="block text-caption font-medium text-slate-500 mb-1">Role</label>
+                    <input type="text" value="Security Analyst" disabled class="w-full py-2 px-4 border border-slate-200 rounded-lg text-sm text-slate-400 bg-slate-50" />
                   </div>
                 </div>
               </div>
@@ -71,106 +70,80 @@ import { MatIconModule } from '@angular/material/icon';
 
           <!-- Notifications Section -->
           @if (activeSection() === 'notifications') {
-            <section class="settings-section">
-              <h2 class="section-title">Notification Preferences</h2>
-              <p class="section-desc">Configure how you receive alerts and updates</p>
+            <section class="mb-8">
+              <h2 class="text-xl font-semibold text-slate-800 m-0 mb-1">Notification Preferences</h2>
+              <p class="text-sm text-slate-400 m-0 mb-6">Configure how you receive alerts and updates</p>
 
-              <div class="settings-card">
-                <h3 class="card-title">Email Notifications</h3>
-                <div class="toggle-list">
-                  <div class="toggle-item">
-                    <div class="toggle-info">
-                      <span class="toggle-label">Critical Vulnerabilities</span>
-                      <span class="toggle-desc">Get notified when critical vulnerabilities are discovered</span>
+              <ui-card class="mb-4">
+                <h3 class="text-body font-semibold text-slate-800 m-0 mb-2">Email Notifications</h3>
+                <div class="flex flex-col">
+                  @for (item of emailNotifications; track item.label) {
+                    <div class="py-4 border-b border-slate-200 last:border-b-0">
+                      <ui-toggle
+                        [label]="item.label"
+                        [description]="item.desc"
+                        [checked]="item.enabled"
+                        (checkedChange)="item.enabled = $event"
+                      />
                     </div>
-                    <button class="toggle-switch active" (click)="toggleSetting($event)">
-                      <span class="toggle-slider"></span>
-                    </button>
-                  </div>
-                  <div class="toggle-item">
-                    <div class="toggle-info">
-                      <span class="toggle-label">Weekly Summary</span>
-                      <span class="toggle-desc">Receive weekly security summary reports</span>
-                    </div>
-                    <button class="toggle-switch active" (click)="toggleSetting($event)">
-                      <span class="toggle-slider"></span>
-                    </button>
-                  </div>
-                  <div class="toggle-item">
-                    <div class="toggle-info">
-                      <span class="toggle-label">Asset Changes</span>
-                      <span class="toggle-desc">Notify when new assets are discovered</span>
-                    </div>
-                    <button class="toggle-switch" (click)="toggleSetting($event)">
-                      <span class="toggle-slider"></span>
-                    </button>
-                  </div>
-                  <div class="toggle-item">
-                    <div class="toggle-info">
-                      <span class="toggle-label">Scan Completion</span>
-                      <span class="toggle-desc">Alert when vulnerability scans complete</span>
-                    </div>
-                    <button class="toggle-switch active" (click)="toggleSetting($event)">
-                      <span class="toggle-slider"></span>
-                    </button>
-                  </div>
+                  }
                 </div>
-              </div>
+              </ui-card>
 
-              <div class="settings-card">
-                <h3 class="card-title">Slack Integration</h3>
-                <div class="integration-status">
-                  <div class="status-info">
-                    <mat-icon class="slack-icon">tag</mat-icon>
+              <ui-card>
+                <h3 class="text-body font-semibold text-slate-800 m-0 mb-2">Slack Integration</h3>
+                <div class="flex justify-between items-center p-4 bg-slate-50 rounded-lg">
+                  <div class="flex items-center gap-2">
+                    <mat-icon class="text-pink-600">tag</mat-icon>
                     <div>
-                      <span class="status-label">Connected to #security-alerts</span>
-                      <span class="status-desc">Workspace: Company Security</span>
+                      <span class="text-sm font-medium text-slate-800 block">Connected to #security-alerts</span>
+                      <span class="text-xs text-slate-400">Workspace: Company Security</span>
                     </div>
                   </div>
-                  <button class="disconnect-btn">Disconnect</button>
+                  <button class="py-1 px-2 bg-transparent border border-red-500 rounded-lg text-xs text-red-500 cursor-pointer">Disconnect</button>
                 </div>
-              </div>
+              </ui-card>
             </section>
           }
 
           <!-- Security Section -->
           @if (activeSection() === 'security') {
-            <section class="settings-section">
-              <h2 class="section-title">Security Settings</h2>
-              <p class="section-desc">Manage your account security</p>
+            <section class="mb-8">
+              <h2 class="text-xl font-semibold text-slate-800 m-0 mb-1">Security Settings</h2>
+              <p class="text-sm text-slate-400 m-0 mb-6">Manage your account security</p>
 
-              <div class="settings-card">
-                <h3 class="card-title">Password</h3>
-                <p class="card-desc">Last changed 30 days ago</p>
-                <button class="action-btn secondary">Change Password</button>
+              <div class="bg-white rounded-xl border border-slate-200 p-6 mb-4">
+                <h3 class="text-body font-semibold text-slate-800 m-0 mb-2">Password</h3>
+                <p class="text-caption text-slate-400 m-0 mb-4">Last changed 30 days ago</p>
+                <button class="inline-flex items-center gap-1 py-2 px-4 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 bg-slate-50 text-slate-500 border border-slate-200 hover:bg-slate-100">Change Password</button>
               </div>
 
-              <div class="settings-card">
-                <h3 class="card-title">Two-Factor Authentication</h3>
-                <div class="security-status enabled">
-                  <mat-icon>verified_user</mat-icon>
+              <div class="bg-white rounded-xl border border-slate-200 p-6 mb-4">
+                <h3 class="text-body font-semibold text-slate-800 m-0 mb-2">Two-Factor Authentication</h3>
+                <div class="flex items-center gap-2 p-4 bg-emerald-50 rounded-lg mb-4 text-emerald-500">
+                  <mat-icon class="icon-md">verified_user</mat-icon>
                   <span>Enabled via Authenticator App</span>
                 </div>
-                <button class="action-btn secondary">Manage 2FA</button>
+                <button class="inline-flex items-center gap-1 py-2 px-4 rounded-lg text-sm font-medium cursor-pointer transition-all duration-200 bg-slate-50 text-slate-500 border border-slate-200 hover:bg-slate-100">Manage 2FA</button>
               </div>
 
-              <div class="settings-card">
-                <h3 class="card-title">Active Sessions</h3>
-                <div class="sessions-list">
-                  <div class="session-item current">
+              <div class="bg-white rounded-xl border border-slate-200 p-6">
+                <h3 class="text-body font-semibold text-slate-800 m-0 mb-2">Active Sessions</h3>
+                <div class="flex flex-col gap-2">
+                  <div class="flex items-center gap-2 p-4 bg-slate-50 rounded-lg border border-emerald-500">
                     <mat-icon>computer</mat-icon>
-                    <div class="session-info">
-                      <span class="session-device">Windows · Chrome</span>
-                      <span class="session-location">New York, US · Current session</span>
+                    <div class="flex-1">
+                      <span class="text-sm font-medium text-slate-800 block">Windows · Chrome</span>
+                      <span class="text-xs text-slate-400">New York, US · Current session</span>
                     </div>
                   </div>
-                  <div class="session-item">
+                  <div class="flex items-center gap-2 p-4 bg-slate-50 rounded-lg">
                     <mat-icon>phone_iphone</mat-icon>
-                    <div class="session-info">
-                      <span class="session-device">iPhone · Safari</span>
-                      <span class="session-location">New York, US · 2 hours ago</span>
+                    <div class="flex-1">
+                      <span class="text-sm font-medium text-slate-800 block">iPhone · Safari</span>
+                      <span class="text-xs text-slate-400">New York, US · 2 hours ago</span>
                     </div>
-                    <button class="revoke-btn">Revoke</button>
+                    <button class="py-1 px-2 bg-transparent border border-slate-200 rounded-lg text-xs text-slate-500 cursor-pointer">Revoke</button>
                   </div>
                 </div>
               </div>
@@ -179,757 +152,92 @@ import { MatIconModule } from '@angular/material/icon';
 
           <!-- Integrations Section -->
           @if (activeSection() === 'integrations') {
-            <section class="settings-section">
-              <h2 class="section-title">Integrations</h2>
-              <p class="section-desc">Connect with external tools and services</p>
+            <section class="mb-8">
+              <h2 class="text-xl font-semibold text-slate-800 m-0 mb-1">Integrations</h2>
+              <p class="text-sm text-slate-400 m-0 mb-6">Connect with external tools and services</p>
 
-              <div class="integrations-grid">
-                <div class="integration-card connected">
-                  <div class="integration-header">
-                    <div class="integration-icon jira">
-                      <mat-icon>view_kanban</mat-icon>
+              <div class="grid grid-cols-3 max-lg:grid-cols-2 max-md:grid-cols-1 gap-4">
+                @for (integration of integrations; track integration.name) {
+                  <div class="bg-white rounded-xl border p-4 transition-all duration-200 hover:shadow-md" [class.border-emerald-500]="integration.connected" [class.border-slate-200]="!integration.connected">
+                    <div class="flex justify-between items-start mb-2">
+                      <div class="flex items-center justify-center w-10 h-10 rounded-lg text-white" [class]="integration.bgClass">
+                        <mat-icon>{{ integration.icon }}</mat-icon>
+                      </div>
+                      <span class="text-xs font-medium" [class.text-emerald-500]="integration.connected" [class.text-slate-400]="!integration.connected">
+                        {{ integration.connected ? 'Connected' : 'Not Connected' }}
+                      </span>
                     </div>
-                    <span class="connection-status connected">Connected</span>
+                    <h4 class="text-body font-semibold text-slate-800 m-0 mb-1">{{ integration.name }}</h4>
+                    <p class="text-xs text-slate-400 m-0 mb-4">{{ integration.desc }}</p>
+                    <button class="w-full py-2 rounded-lg text-caption cursor-pointer transition-all duration-200"
+                      [class]="integration.connected ? 'bg-slate-50 border border-slate-200 text-slate-500 hover:bg-slate-100' : 'bg-blue-500 border-blue-500 text-white hover:bg-blue-600'">
+                      {{ integration.connected ? 'Configure' : 'Connect' }}
+                    </button>
                   </div>
-                  <h4 class="integration-name">Jira</h4>
-                  <p class="integration-desc">Create tickets for vulnerabilities automatically</p>
-                  <button class="integration-btn">Configure</button>
-                </div>
-
-                <div class="integration-card connected">
-                  <div class="integration-header">
-                    <div class="integration-icon slack">
-                      <mat-icon>tag</mat-icon>
-                    </div>
-                    <span class="connection-status connected">Connected</span>
-                  </div>
-                  <h4 class="integration-name">Slack</h4>
-                  <p class="integration-desc">Send alerts to Slack channels</p>
-                  <button class="integration-btn">Configure</button>
-                </div>
-
-                <div class="integration-card">
-                  <div class="integration-header">
-                    <div class="integration-icon github">
-                      <mat-icon>code</mat-icon>
-                    </div>
-                    <span class="connection-status">Not Connected</span>
-                  </div>
-                  <h4 class="integration-name">GitHub</h4>
-                  <p class="integration-desc">Scan repositories for vulnerabilities</p>
-                  <button class="integration-btn connect">Connect</button>
-                </div>
-
-                <div class="integration-card">
-                  <div class="integration-header">
-                    <div class="integration-icon aws">
-                      <mat-icon>cloud</mat-icon>
-                    </div>
-                    <span class="connection-status">Not Connected</span>
-                  </div>
-                  <h4 class="integration-name">AWS</h4>
-                  <p class="integration-desc">Discover cloud assets automatically</p>
-                  <button class="integration-btn connect">Connect</button>
-                </div>
-
-                <div class="integration-card">
-                  <div class="integration-header">
-                    <div class="integration-icon pagerduty">
-                      <mat-icon>notifications_active</mat-icon>
-                    </div>
-                    <span class="connection-status">Not Connected</span>
-                  </div>
-                  <h4 class="integration-name">PagerDuty</h4>
-                  <p class="integration-desc">Trigger incidents for critical findings</p>
-                  <button class="integration-btn connect">Connect</button>
-                </div>
-
-                <div class="integration-card">
-                  <div class="integration-header">
-                    <div class="integration-icon splunk">
-                      <mat-icon>analytics</mat-icon>
-                    </div>
-                    <span class="connection-status">Not Connected</span>
-                  </div>
-                  <h4 class="integration-name">Splunk</h4>
-                  <p class="integration-desc">Export vulnerability data for analysis</p>
-                  <button class="integration-btn connect">Connect</button>
-                </div>
+                }
               </div>
             </section>
           }
 
           <!-- Appearance Section -->
           @if (activeSection() === 'appearance') {
-            <section class="settings-section">
-              <h2 class="section-title">Appearance</h2>
-              <p class="section-desc">Customize the look and feel</p>
+            <section class="mb-8">
+              <h2 class="text-xl font-semibold text-slate-800 m-0 mb-1">Appearance</h2>
+              <p class="text-sm text-slate-400 m-0 mb-6">Customize the look and feel</p>
 
-              <div class="settings-card">
-                <h3 class="card-title">Theme</h3>
-                <div class="theme-options">
-                  <button class="theme-btn active">
-                    <mat-icon>light_mode</mat-icon>
-                    Light
-                  </button>
-                  <button class="theme-btn">
-                    <mat-icon>dark_mode</mat-icon>
-                    Dark
-                  </button>
-                  <button class="theme-btn">
-                    <mat-icon>settings_suggest</mat-icon>
-                    System
-                  </button>
+              <div class="bg-white rounded-xl border border-slate-200 p-6 mb-4">
+                <h3 class="text-body font-semibold text-slate-800 m-0 mb-4">Theme</h3>
+                <div class="flex flex-wrap gap-2">
+                  @for (theme of themes; track theme.id) {
+                    <button class="flex items-center gap-1 py-2 px-4 border rounded-lg text-sm cursor-pointer transition-all duration-200"
+                      [class]="activeTheme() === theme.id ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-500 border-slate-200'"
+                      (click)="activeTheme.set(theme.id)">
+                      <mat-icon class="icon-sm">{{ theme.icon }}</mat-icon>
+                      {{ theme.label }}
+                    </button>
+                  }
                 </div>
               </div>
 
-              <div class="settings-card">
-                <h3 class="card-title">Dashboard Layout</h3>
-                <div class="toggle-item">
-                  <div class="toggle-info">
-                    <span class="toggle-label">Compact Mode</span>
-                    <span class="toggle-desc">Show more information in less space</span>
+              <div class="bg-white rounded-xl border border-slate-200 p-6">
+                <h3 class="text-body font-semibold text-slate-800 m-0 mb-4">Dashboard Layout</h3>
+                @for (item of layoutSettings; track item.label) {
+                  <div class="py-4 border-b border-slate-200 last:border-b-0">
+                    <ui-toggle
+                      [label]="item.label"
+                      [description]="item.desc"
+                      [checked]="item.enabled"
+                      (checkedChange)="item.enabled = $event"
+                    />
                   </div>
-                  <button class="toggle-switch" (click)="toggleSetting($event)">
-                    <span class="toggle-slider"></span>
-                  </button>
-                </div>
-                <div class="toggle-item">
-                  <div class="toggle-info">
-                    <span class="toggle-label">Show Animations</span>
-                    <span class="toggle-desc">Enable UI animations and transitions</span>
-                  </div>
-                  <button class="toggle-switch active" (click)="toggleSetting($event)">
-                    <span class="toggle-slider"></span>
-                  </button>
-                </div>
+                }
               </div>
             </section>
           }
 
           <!-- Save Button -->
-          <div class="save-bar">
-            <button class="save-btn">
-              <mat-icon>save</mat-icon>
+          <div class="sticky bottom-6 flex justify-end pt-4">
+            <ui-button variant="primary" iconLeft="save">
               Save Changes
-            </button>
+            </ui-button>
           </div>
         </div>
       </div>
     </div>
   `,
   styles: `
-    .settings-container {
-      padding: var(--spacing-lg);
-      max-width: 1200px;
-      margin: 0 auto;
-      opacity: 0;
-      animation: fadeIn 0.4s ease forwards;
-    }
+    @reference "tailwindcss";
 
-    .settings-container.loaded { opacity: 1; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .animate-fade-in { animation: fadeIn 0.4s ease forwards; }
 
-    @keyframes fadeIn { to { opacity: 1; } }
-
-    /* Header */
-    .page-header {
-      margin-bottom: var(--spacing-xl);
-    }
-
-    .page-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--color-text-primary);
-      margin: 0;
-    }
-
-    .page-subtitle {
-      font-size: 0.875rem;
-      color: var(--color-text-muted);
-      margin: var(--spacing-xs) 0 0;
-    }
-
-    /* Layout */
-    .settings-layout {
-      display: grid;
-      grid-template-columns: 14rem 1fr;
-      gap: var(--spacing-xl);
-    }
-
-    /* Nav */
-    .settings-nav {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-xs);
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-      padding: var(--spacing-sm) var(--spacing-md);
-      border: none;
-      background: transparent;
-      border-radius: var(--radius-md);
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--color-text-secondary);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: left;
-    }
-
-    .nav-item:hover {
-      background-color: var(--color-bg-secondary);
-    }
-
-    .nav-item.active {
-      background-color: var(--color-success);
-      color: white;
-    }
-
-    .nav-item mat-icon {
-      font-size: 1.125rem;
-      width: 1.125rem;
-      height: 1.125rem;
-    }
-
-    /* Content */
-    .settings-content {
-      min-width: 0;
-    }
-
-    .settings-section {
-      margin-bottom: var(--spacing-xl);
-    }
-
-    .section-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      margin: 0 0 var(--spacing-xs);
-    }
-
-    .section-desc {
-      font-size: 0.875rem;
-      color: var(--color-text-muted);
-      margin: 0 0 var(--spacing-lg);
-    }
-
-    /* Cards */
-    .settings-card {
-      background-color: var(--color-bg-primary);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--color-border);
-      padding: var(--spacing-lg);
-      margin-bottom: var(--spacing-md);
-    }
-
-    .card-title {
-      font-size: 0.9375rem;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      margin: 0 0 var(--spacing-sm);
-    }
-
-    .card-desc {
-      font-size: 0.8125rem;
-      color: var(--color-text-muted);
-      margin: 0 0 var(--spacing-md);
-    }
-
-    /* Profile */
-    .profile-card {
-      background-color: var(--color-bg-primary);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--color-border);
-      padding: var(--spacing-lg);
-      display: flex;
-      gap: var(--spacing-xl);
-    }
-
-    .avatar-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: var(--spacing-sm);
-    }
-
-    .avatar {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 6rem;
-      height: 6rem;
-      border-radius: var(--radius-full);
-      background: linear-gradient(135deg, var(--color-bg-tertiary), var(--color-bg-secondary));
-      color: var(--color-text-muted);
-    }
-
-    .avatar mat-icon {
-      font-size: 3rem;
-      width: 3rem;
-      height: 3rem;
-    }
-
-    .change-avatar-btn {
-      padding: var(--spacing-xs) var(--spacing-sm);
-      background: transparent;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      font-size: 0.75rem;
-      color: var(--color-text-secondary);
-      cursor: pointer;
-    }
-
-    .profile-form {
-      flex: 1;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--spacing-md);
-    }
-
-    .form-group {
-      margin-bottom: var(--spacing-md);
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.8125rem;
-      font-weight: 500;
-      color: var(--color-text-secondary);
-      margin-bottom: var(--spacing-xs);
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: var(--spacing-sm) var(--spacing-md);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      font-size: 0.875rem;
-      color: var(--color-text-primary);
-      background-color: var(--color-bg-primary);
-    }
-
-    .form-group input:disabled {
-      background-color: var(--color-bg-secondary);
-      color: var(--color-text-muted);
-    }
-
-    /* Toggle */
-    .toggle-list {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .toggle-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: var(--spacing-md) 0;
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .toggle-item:last-child {
-      border-bottom: none;
-    }
-
-    .toggle-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.125rem;
-    }
-
-    .toggle-label {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--color-text-primary);
-    }
-
-    .toggle-desc {
-      font-size: 0.75rem;
-      color: var(--color-text-muted);
-    }
-
-    .toggle-switch {
-      position: relative;
-      width: 2.75rem;
-      height: 1.5rem;
-      background-color: var(--color-bg-tertiary);
-      border: none;
-      border-radius: var(--radius-full);
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
-
-    .toggle-switch.active {
-      background-color: var(--color-success);
-    }
-
-    .toggle-slider {
-      position: absolute;
-      top: 0.125rem;
-      left: 0.125rem;
-      width: 1.25rem;
-      height: 1.25rem;
-      background-color: white;
-      border-radius: var(--radius-full);
-      transition: transform 0.2s ease;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    }
-
-    .toggle-switch.active .toggle-slider {
-      transform: translateX(1.25rem);
-    }
-
-    /* Integration Status */
-    .integration-status {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: var(--spacing-md);
-      background-color: var(--color-bg-secondary);
-      border-radius: var(--radius-md);
-    }
-
-    .status-info {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-    }
-
-    .slack-icon {
-      color: #e01e5a;
-    }
-
-    .status-label {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--color-text-primary);
-      display: block;
-    }
-
-    .status-desc {
-      font-size: 0.75rem;
-      color: var(--color-text-muted);
-    }
-
-    .disconnect-btn {
-      padding: var(--spacing-xs) var(--spacing-sm);
-      background: transparent;
-      border: 1px solid var(--color-critical);
-      border-radius: var(--radius-md);
-      font-size: 0.75rem;
-      color: var(--color-critical);
-      cursor: pointer;
-    }
-
-    /* Security */
-    .security-status {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-      padding: var(--spacing-md);
-      background-color: var(--color-bg-secondary);
-      border-radius: var(--radius-md);
-      margin-bottom: var(--spacing-md);
-    }
-
-    .security-status.enabled {
-      background-color: #f0fdf4;
-      color: var(--color-success);
-    }
-
-    .security-status mat-icon {
-      font-size: 1.25rem;
-      width: 1.25rem;
-      height: 1.25rem;
-    }
-
-    .sessions-list {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-sm);
-    }
-
-    .session-item {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-sm);
-      padding: var(--spacing-md);
-      background-color: var(--color-bg-secondary);
-      border-radius: var(--radius-md);
-    }
-
-    .session-item.current {
-      border: 1px solid var(--color-success);
-    }
-
-    .session-info {
-      flex: 1;
-    }
-
-    .session-device {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--color-text-primary);
-      display: block;
-    }
-
-    .session-location {
-      font-size: 0.75rem;
-      color: var(--color-text-muted);
-    }
-
-    .revoke-btn {
-      padding: var(--spacing-xs) var(--spacing-sm);
-      background: transparent;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      font-size: 0.75rem;
-      color: var(--color-text-secondary);
-      cursor: pointer;
-    }
-
-    /* Integrations Grid */
-    .integrations-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--spacing-md);
-    }
-
-    .integration-card {
-      background-color: var(--color-bg-primary);
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--color-border);
-      padding: var(--spacing-md);
-      transition: all 0.2s ease;
-    }
-
-    .integration-card:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    .integration-card.connected {
-      border-color: var(--color-success);
-    }
-
-    .integration-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: var(--spacing-sm);
-    }
-
-    .integration-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.5rem;
-      height: 2.5rem;
-      border-radius: var(--radius-md);
-    }
-
-    .integration-icon.jira { background: #0052cc; color: white; }
-    .integration-icon.slack { background: #4a154b; color: white; }
-    .integration-icon.github { background: #24292e; color: white; }
-    .integration-icon.aws { background: #ff9900; color: white; }
-    .integration-icon.pagerduty { background: #06ac38; color: white; }
-    .integration-icon.splunk { background: #000000; color: #65a637; }
-
-    .connection-status {
-      font-size: 0.6875rem;
-      font-weight: 500;
-      color: var(--color-text-muted);
-    }
-
-    .connection-status.connected {
-      color: var(--color-success);
-    }
-
-    .integration-name {
-      font-size: 0.9375rem;
-      font-weight: 600;
-      color: var(--color-text-primary);
-      margin: 0 0 0.25rem;
-    }
-
-    .integration-desc {
-      font-size: 0.75rem;
-      color: var(--color-text-muted);
-      margin: 0 0 var(--spacing-md);
-    }
-
-    .integration-btn {
-      width: 100%;
-      padding: var(--spacing-sm);
-      background-color: var(--color-bg-secondary);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      font-size: 0.8125rem;
-      color: var(--color-text-secondary);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .integration-btn:hover {
-      background-color: var(--color-bg-tertiary);
-    }
-
-    .integration-btn.connect {
-      background-color: var(--color-info);
-      border-color: var(--color-info);
-      color: white;
-    }
-
-    .integration-btn.connect:hover {
-      background-color: #2563eb;
-    }
-
-    /* Theme Options */
-    .theme-options {
-      display: flex;
-      gap: var(--spacing-sm);
-    }
-
-    .theme-btn {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-xs);
-      padding: var(--spacing-sm) var(--spacing-md);
-      border: 1px solid var(--color-border);
-      background-color: var(--color-bg-primary);
-      border-radius: var(--radius-md);
-      font-size: 0.875rem;
-      color: var(--color-text-secondary);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .theme-btn.active {
-      background-color: var(--color-text-primary);
-      color: white;
-      border-color: var(--color-text-primary);
-    }
-
-    .theme-btn mat-icon {
-      font-size: 1.125rem;
-      width: 1.125rem;
-      height: 1.125rem;
-    }
-
-    /* Action Buttons */
-    .action-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--spacing-xs);
-      padding: var(--spacing-sm) var(--spacing-md);
-      border-radius: var(--radius-md);
-      font-size: 0.875rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border: none;
-    }
-
-    .action-btn.secondary {
-      background-color: var(--color-bg-secondary);
-      color: var(--color-text-secondary);
-      border: 1px solid var(--color-border);
-    }
-
-    .action-btn.secondary:hover {
-      background-color: var(--color-bg-tertiary);
-    }
-
-    /* Save Bar */
-    .save-bar {
-      position: sticky;
-      bottom: var(--spacing-lg);
-      display: flex;
-      justify-content: flex-end;
-      padding-top: var(--spacing-md);
-    }
-
-    .save-btn {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-xs);
-      padding: var(--spacing-sm) var(--spacing-lg);
-      background-color: var(--color-success);
-      color: white;
-      border: none;
-      border-radius: var(--radius-md);
-      font-size: 0.875rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-
-    .save-btn:hover {
-      background-color: #059669;
-      transform: translateY(-1px);
-    }
-
-    .save-btn mat-icon {
-      font-size: 1.125rem;
-      width: 1.125rem;
-      height: 1.125rem;
-    }
-
-    /* Responsive */
-    @media (max-width: 1024px) {
-      .integrations-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-
-    @media (max-width: 768px) {
-      .settings-container {
-        padding: var(--spacing-md);
-      }
-
-      .settings-layout {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
-      }
-
-      .settings-nav {
-        flex-direction: row;
-        overflow-x: auto;
-        padding-bottom: var(--spacing-sm);
-      }
-
-      .nav-item {
-        white-space: nowrap;
-      }
-
-      .profile-card {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .form-row {
-        grid-template-columns: 1fr;
-      }
-
-      .integrations-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .theme-options {
-        flex-wrap: wrap;
-      }
-    }
+    .nav-item.active { @apply bg-emerald-500 text-white; }
   `,
 })
 export class SettingsComponent implements OnInit {
   isLoaded = signal(false);
   activeSection = signal('profile');
+  activeTheme = signal('light');
 
   settingsSections = [
     { id: 'profile', label: 'Profile', icon: 'person' },
@@ -939,12 +247,34 @@ export class SettingsComponent implements OnInit {
     { id: 'appearance', label: 'Appearance', icon: 'palette' },
   ];
 
+  emailNotifications = [
+    { label: 'Critical Vulnerabilities', desc: 'Get notified when critical vulnerabilities are discovered', enabled: true },
+    { label: 'Weekly Summary', desc: 'Receive weekly security summary reports', enabled: true },
+    { label: 'Asset Changes', desc: 'Notify when new assets are discovered', enabled: false },
+    { label: 'Scan Completion', desc: 'Alert when vulnerability scans complete', enabled: true },
+  ];
+
+  integrations = [
+    { name: 'Jira', icon: 'view_kanban', desc: 'Create tickets for vulnerabilities automatically', connected: true, bgClass: 'bg-blue-600' },
+    { name: 'Slack', icon: 'tag', desc: 'Send alerts to Slack channels', connected: true, bgClass: 'bg-purple-800' },
+    { name: 'GitHub', icon: 'code', desc: 'Scan repositories for vulnerabilities', connected: false, bgClass: 'bg-slate-800' },
+    { name: 'AWS', icon: 'cloud', desc: 'Discover cloud assets automatically', connected: false, bgClass: 'bg-orange-500' },
+    { name: 'PagerDuty', icon: 'notifications_active', desc: 'Trigger incidents for critical findings', connected: false, bgClass: 'bg-green-600' },
+    { name: 'Splunk', icon: 'analytics', desc: 'Export vulnerability data for analysis', connected: false, bgClass: 'bg-black' },
+  ];
+
+  themes = [
+    { id: 'light', label: 'Light', icon: 'light_mode' },
+    { id: 'dark', label: 'Dark', icon: 'dark_mode' },
+    { id: 'system', label: 'System', icon: 'settings_suggest' },
+  ];
+
+  layoutSettings = [
+    { label: 'Compact Mode', desc: 'Show more information in less space', enabled: false },
+    { label: 'Show Animations', desc: 'Enable UI animations and transitions', enabled: true },
+  ];
+
   ngOnInit(): void {
     setTimeout(() => this.isLoaded.set(true), 100);
-  }
-
-  toggleSetting(event: Event): void {
-    const button = event.currentTarget as HTMLButtonElement;
-    button.classList.toggle('active');
   }
 }
