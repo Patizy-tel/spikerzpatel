@@ -5,7 +5,11 @@
       "Bash(git add:*)",
       "Bash(git commit -m \"$(cat <<''EOF''\nfeat: set up project foundation with Angular Material and design tokens\n\n- Add Angular Material, ngx-graph, and D3 dependencies\n- Configure animations provider for Material components\n- Create CSS design tokens for colors, spacing, and typography\n- Add TypeScript models for Asset, Vulnerability, and Graph data\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git commit:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npx ng serve:*)",
+      "Bash(timeout /t 10 /nobreak)",
+      "Bash(nul)",
+      "Bash(npx tailwindcss init)"
     ],
     "deny": [],
     "ask": []
