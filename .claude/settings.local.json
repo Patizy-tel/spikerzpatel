@@ -10,7 +10,8 @@
       "Bash(timeout /t 10 /nobreak)",
       "Bash(nul)",
       "Bash(npx tailwindcss init)",
-      "Bash(npm info:*)"
+      "Bash(npm info:*)",
+      "Bash(git push)"
     ],
     "deny": [],
     "ask": []
