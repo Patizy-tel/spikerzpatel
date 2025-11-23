@@ -44,8 +44,8 @@ export interface SidebarItem {
             <mat-icon>person</mat-icon>
           </div>
           <div class="user-details">
-            <span class="user-name">Lorem</span>
-            <span class="user-role">Lorem</span>
+            <span class="user-name">John Smith</span>
+            <span class="user-role">Security Analyst</span>
           </div>
           <button class="settings-btn">
             <mat-icon>tune</mat-icon>

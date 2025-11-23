@@ -9,41 +9,41 @@ import {
 export const MOCK_ASSETS: Asset[] = [
   {
     id: 'asset-1',
-    name: 'Loremipsumdolorsit',
+    name: 'prod-web-server-01',
     ipAddress: '192.168.1.1',
     risk: 'critical',
     tags: [
-      { label: 'Lorem', type: 'error' },
-      { label: 'Ipsum', type: 'warning' },
+      { label: 'Production', type: 'error' },
+      { label: 'External', type: 'warning' },
     ],
   },
   {
     id: 'asset-2',
-    name: 'Loremipsumdolorsit002',
+    name: 'prod-web-server-02',
     ipAddress: '192.168.1.2',
     risk: 'critical',
     tags: [
-      { label: 'Lorem', type: 'error' },
-      { label: 'Ipsum', type: 'warning' },
+      { label: 'Production', type: 'error' },
+      { label: 'External', type: 'warning' },
     ],
   },
   {
     id: 'asset-3',
-    name: 'Loremipsum',
-    ipAddress: '1.2.3.4',
+    name: 'staging-api-gateway',
+    ipAddress: '10.0.2.15',
     risk: 'high',
     tags: [
-      { label: 'Lorem', type: 'info' },
-      { label: 'Ipsum', type: 'warning' },
-      { label: 'Lorem', type: 'success' },
+      { label: 'Staging', type: 'info' },
+      { label: 'Internal', type: 'warning' },
+      { label: 'Patched', type: 'success' },
     ],
   },
   {
     id: 'asset-4',
-    name: 'Loremipsu',
-    ipAddress: '1.2.3.4',
+    name: 'dev-database-01',
+    ipAddress: '10.0.3.20',
     risk: 'medium',
-    tags: [{ label: 'Lorem', type: 'default' }],
+    tags: [{ label: 'Development', type: 'default' }],
   },
 ];
 
@@ -51,22 +51,22 @@ export const MOCK_GRAPH_DATA: GraphData = {
   nodes: [
     {
       id: 'node-1',
-      label: 'Loremipsuatim',
+      label: 'Internet Gateway',
       data: MOCK_ASSETS[0],
     },
     {
       id: 'node-2',
-      label: 'Loremipsu',
+      label: 'Load Balancer',
       data: MOCK_ASSETS[3],
     },
     {
       id: 'node-3',
-      label: 'Loremipsumdolorsit',
+      label: 'prod-web-server-01',
       data: MOCK_ASSETS[0],
     },
     {
       id: 'node-4',
-      label: 'Loremipsumdolorsit002',
+      label: 'prod-web-server-02',
       data: MOCK_ASSETS[1],
     },
   ],
@@ -88,64 +88,64 @@ export const MOCK_RISK_SUMMARY: RiskSummary = {
 export const MOCK_VULNERABILITY: Vulnerability = {
   id: 'vuln-1',
   cveId: 'CVE-2024-6387',
-  title: 'Lorem Lorem Lorem',
+  title: 'OpenSSH Remote Code Execution',
   description:
-    'Lorem Ipsum Dolor Sit Amet Consectetur. Aenean Sodales Pellentesque Gravida Nibh Et Magna Faucibus. Dui Commodo Ut Metus Amet Egestas Habitant Viverra. Quisque Fusce Senectus Facilisis Non Diam Leo Nulla Sem Pellentesque. Sit In Vel Sed Cursus Metus Sit Fringilla Vestibulum.',
+    'A critical signal handler race condition vulnerability in OpenSSH server (sshd) allows unauthenticated remote code execution as root on glibc-based Linux systems. This vulnerability affects OpenSSH versions 8.5p1 through 9.7p1. The vulnerability is exploitable through a carefully timed sequence of SSH authentication requests that trigger a race condition in the SIGALRM signal handler.',
   extraInfo:
-    'Lorem ipsum dolor sit amet consectetur. Tempus a id adipiscing fames egestas tellus dis pretium tempus, justo risit nisi lorem lectus sit ornare. Amet gravida integer sed lobortis amet portitor pellentesque sit. Amet felis. Eu consectetur interdum auctor sed adipsum. Eu poritor accumsan tortor id. Duis a alisuam eu ultrices commodo lectus. Lacitus ipsum erat purus viverra vulputate viverra in nunc nulla. Euismod rhoncus mauris urna orci gravida sagittis neque. Amet risus in vel etiam, mauris mi habitant eaque massa in etiam sit. Commodo nibh viverra lobortis augue lorem quam lorem suspendisse.',
-  publishedDate: '10/19/2017',
+    'The vulnerability exists due to improper handling of asynchronous signals in the SSH daemon. When a client fails to authenticate within the LoginGraceTime period (default 120 seconds), a SIGALRM signal is raised. The signal handler calls functions that are not async-signal-safe, creating a race condition that can be exploited for remote code execution. Exploitation requires approximately 10,000 connection attempts on average, making it feasible for determined attackers.',
+  publishedDate: '07/01/2024',
   severity: 'critical',
   affectedAssets: MOCK_ASSETS.slice(0, 2),
   details: [
-    { label: 'Lorem Ipsum Dolor', value: '10/19/2017' },
-    { label: 'Lorem Ipsum Dolor', value: 'Ut' },
-    { label: 'Lorem Ipsum Dolor', value: 'Eros' },
-    { label: 'Lorem Ipsum Dolor', value: 'Yes', hasCheckmark: true },
-    { label: 'Lorem Ipsum Dolor', value: 'Sit' },
-    { label: 'Lorem Ipsum Dolor', value: 'Lorem Ipsum Dolor' },
-    { label: 'Lorem Ipsum Dolor', value: 'Lorem Ipsum Dolor' },
+    { label: 'Published Date', value: '07/01/2024' },
+    { label: 'CVSS Score', value: '9.8 Critical' },
+    { label: 'Attack Vector', value: 'Network' },
+    { label: 'Exploit Available', value: 'Yes', hasCheckmark: true },
+    { label: 'Privileges Required', value: 'None' },
+    { label: 'Affected Versions', value: 'OpenSSH 8.5p1 - 9.7p1' },
+    { label: 'Patch Available', value: 'OpenSSH 9.8p1' },
   ],
 };
 
 export const MOCK_REMEDIATION_TECHNIQUES: RemediationTechnique[] = [
   {
     id: 'rem-a',
-    name: 'remediation technique A',
+    name: 'Upgrade OpenSSH',
     type: 'A',
-    description: 'Lorem Ipsum Dolor Sit Amet Consectetur. Nunc Vitae Tortor Convallis Vitae Arcu. Magna.',
+    description: 'Upgrade to OpenSSH version 9.8p1 or later which contains the security fix for this vulnerability. This is the recommended permanent solution.',
     servers: [
-      { id: 'srv-a1', name: 'Lorem P', description: 'Lorem Ipsum Dolor Sit Amet Consectetur.' },
-      { id: 'srv-a2', name: 'Lorem P', description: 'Lorem Ipsum Dolor Sit Amet Consectetur.' },
+      { id: 'srv-a1', name: 'Web Server 01', description: 'Production server running OpenSSH 9.6p1 - requires immediate upgrade.' },
+      { id: 'srv-a2', name: 'Web Server 02', description: 'Production server running OpenSSH 9.6p1 - requires immediate upgrade.' },
     ],
   },
   {
     id: 'rem-b',
-    name: 'remediation technique B',
+    name: 'Reduce LoginGraceTime',
     type: 'B',
     description:
-      'Lorem Ipsum Dolor Sit Amet Consectetur. Quis Viverra Etiam Pellentesque Lectus Semper In Massa Purus. Auctor Aenean Aenean Senectus Massa Dignissim Vehicula Mi Erat Purus. Praesent Scelerisque Aliquet Metus Sagittis Dictum Sed Sed. Sed Venenatis Sed Urna Quam.',
+      'As a temporary mitigation, reduce the LoginGraceTime parameter to 0 in sshd_config. This disables the vulnerable code path but may cause denial of service under heavy load. Monitor server performance after applying this change.',
     servers: [
-      { id: 'srv-b1', name: 'Lorem S', description: 'Lorem Ipsum Dolor Sit Amet Consectetur.' },
-      { id: 'srv-b2', name: 'Lorem S', description: 'Lorem Ipsum Dolor Sit Amet Consectetur.' },
+      { id: 'srv-b1', name: 'API Gateway', description: 'Set LoginGraceTime=0 in /etc/ssh/sshd_config and restart sshd service.' },
+      { id: 'srv-b2', name: 'Jump Host', description: 'Set LoginGraceTime=0 in /etc/ssh/sshd_config and restart sshd service.' },
     ],
   },
   {
     id: 'rem-c',
-    name: 'remediation technique C',
+    name: 'Network Segmentation',
     type: 'C',
-    description: 'Lorem Ipsum Dolor Sit Amet Consectetur. In Laoreet Elementum Luctus Odio. Id Enim Urna.',
+    description: 'Implement network-level controls to limit SSH access. Use firewall rules to restrict SSH connections to known IP ranges and implement rate limiting to slow down exploitation attempts.',
     servers: [
-      { id: 'srv-c1', name: 'Lorem T', description: 'Lorem Ipsum Dolor Sit Amet Consectetur.' },
-      { id: 'srv-c2', name: 'Lorem T', description: 'Lorem Ipsum Dolor Sit Amet Consectetur.' },
+      { id: 'srv-c1', name: 'Firewall', description: 'Configure SSH rate limiting: max 10 connections per minute per IP.' },
+      { id: 'srv-c2', name: 'Jump Host', description: 'Restrict direct SSH access; require VPN connection first.' },
     ],
   },
 ];
 
 export const SIDEBAR_MENU_ITEMS = [
-  { id: 'item-1', label: 'Lorem', active: false },
-  { id: 'item-2', label: 'Lorem', active: false },
-  { id: 'item-3', label: 'Lorem', active: false },
-  { id: 'item-4', label: 'Lorem', active: true },
-  { id: 'item-5', label: 'Lorem', active: false },
-  { id: 'item-6', label: 'Lorem', active: false },
+  { id: 'item-1', label: 'Dashboard', icon: 'dashboard', active: false },
+  { id: 'item-2', label: 'Vulnerabilities', icon: 'bug_report', active: false },
+  { id: 'item-3', label: 'Assets', icon: 'devices', active: false },
+  { id: 'item-4', label: 'CVE-2024-6387', icon: 'security', active: true },
+  { id: 'item-5', label: 'Reports', icon: 'assessment', active: false },
+  { id: 'item-6', label: 'Settings', icon: 'settings', active: false },
 ];
