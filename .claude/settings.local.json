@@ -9,7 +9,8 @@
       "Bash(npx ng serve:*)",
       "Bash(timeout /t 10 /nobreak)",
       "Bash(nul)",
-      "Bash(npx tailwindcss init)"
+      "Bash(npx tailwindcss init)",
+      "Bash(npm info:*)"
     ],
     "deny": [],
     "ask": []
